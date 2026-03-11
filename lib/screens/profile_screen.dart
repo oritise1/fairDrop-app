@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/brand_theme.dart';
+import 'profile_sub_screens.dart'; // Import the new sub-screens
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -11,8 +12,8 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Profile"),
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: FairDropColors.deepCharcoal,
+        backgroundColor: FairDropColors.primaryOrange,
+        foregroundColor: FairDropColors.creamBackground,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -23,17 +24,23 @@ class ProfileScreen extends StatelessWidget {
               _ProfileMenuItem(
                 icon: Icons.person_outline_rounded,
                 title: "Personal Information",
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PersonalInfoScreen()));
+                },
               ),
               _ProfileMenuItem(
                 icon: Icons.location_on_outlined,
                 title: "Saved Addresses",
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const SavedAddressesScreen()));
+                },
               ),
               _ProfileMenuItem(
                 icon: Icons.payment_rounded,
                 title: "Payment Methods",
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentMethodsScreen()));
+                },
               ),
             ]),
             const SizedBox(height: 20),
@@ -94,26 +101,31 @@ class ProfileScreen extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 40,
-            backgroundColor: FairDropColors.primaryOrange.withOpacity(0.1),
+            backgroundColor: FairDropColors.primaryOrange.withOpacity(0.2),
             child: const Icon(Icons.person, size: 40, color: FairDropColors.primaryOrange),
           ),
           const SizedBox(width: 20),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Tunde Ogunleye",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: FairDropColors.deepCharcoal,
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Ibrahim Abdulkareem",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: FairDropColors.deepCharcoal,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              Text(
-                "tunde.dev@example.com",
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
+                Text(
+                  "ikareemabiodun730@gmail.com",
+                  style: TextStyle(color: Colors.grey),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ],
+            ),
           ),
         ],
       ),

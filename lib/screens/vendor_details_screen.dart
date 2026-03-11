@@ -58,7 +58,8 @@ class VendorDetailsScreen extends StatelessWidget {
                             children: [
                               Icon(Icons.star, color: Colors.green, size: 18),
                               SizedBox(width: 4),
-                              Text("4.8 (100+ ratings)", style: TextStyle(fontWeight: FontWeight.bold)),
+                              Text("4.8 (100+ ratings)",
+                                  style: TextStyle(fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ],
@@ -71,8 +72,14 @@ class VendorDetailsScreen extends StatelessWidget {
                         ),
                         child: const Column(
                           children: [
-                            Text("25 mins", style: TextStyle(color: FairDropColors.secondaryGreen, fontWeight: FontWeight.bold)),
-                            Text("Delivery", style: TextStyle(fontSize: 10, color: FairDropColors.secondaryGreen)),
+                            Text("25 mins",
+                                style: TextStyle(
+                                    color: FairDropColors.secondaryGreen,
+                                    fontWeight: FontWeight.bold)),
+                            Text("Delivery",
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color: FairDropColors.secondaryGreen)),
                           ],
                         ),
                       ),
@@ -88,14 +95,14 @@ class VendorDetailsScreen extends StatelessWidget {
             ),
           ),
 
-          // Menu Items List
+          // Menu Items List using the new Stateful Item widget
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                return _buildMenuItem(
-                  "Special Amala & Ewedu",
-                  "Served with gbegiri and your choice of protein.",
-                  "₦1,500",
+                return MenuItemRow(
+                  title: index == 0 ? "Special Amala & Ewedu" : "Jollof Rice Combo",
+                  description: "Served with gbegiri and your choice of protein.",
+                  price: "₦1,500",
                 );
               },
               childCount: 10,
@@ -104,46 +111,6 @@ class VendorDetailsScreen extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: _buildViewCartButton(context),
-    );
-  }
-
-  Widget _buildMenuItem(String title, String description, String price) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    const SizedBox(height: 4),
-                    Text(description, style: const TextStyle(color: Colors.grey, fontSize: 13)),
-                    const SizedBox(height: 8),
-                    Text(price, style: const TextStyle(color: FairDropColors.primaryOrange, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16),
-              Container(
-                height: 80,
-                width: 80,
-                decoration: BoxDecoration(
-                  color: FairDropColors.creamBackground,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.add_circle, color: FairDropColors.primaryOrange, size: 30),
-                  onPressed: () {},
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
@@ -172,11 +139,144 @@ class VendorDetailsScreen extends StatelessWidget {
             children: [
               Text(
                 "View Cart",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               Text(
                 "₦1,500",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A dedicated Stateful Widget for each Menu Item to handle its own quantity
+class MenuItemRow extends StatefulWidget {
+  final String title;
+  final String description;
+  final String price;
+
+  const MenuItemRow({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.price,
+  });
+
+  @override
+  State<MenuItemRow> createState() => _MenuItemRowState();
+}
+
+class _MenuItemRowState extends State<MenuItemRow> {
+  int _quantity = 0;
+
+  void _increment() {
+    setState(() {
+      _quantity++;
+    });
+  }
+
+  void _decrement() {
+    if (_quantity > 0) {
+      setState(() {
+        _quantity--;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: Colors.grey.shade200),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.title,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16)),
+                    const SizedBox(height: 4),
+                    Text(widget.description,
+                        style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    Text(widget.price,
+                        style: const TextStyle(
+                            color: FairDropColors.primaryOrange,
+                            fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              
+              // Dynamic Quantity Selector
+              Column(
+                children: [
+                  if (_quantity == 0)
+                    GestureDetector(
+                      onTap: _increment,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: FairDropColors.primaryOrange.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: FairDropColors.primaryOrange),
+                        ),
+                        child: const Text(
+                          "ADD",
+                          style: TextStyle(
+                            color: FairDropColors.primaryOrange,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    Container(
+                      decoration: BoxDecoration(
+                        color: FairDropColors.primaryOrange,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: _decrement,
+                            icon: const Icon(Icons.remove, color: Colors.white, size: 18),
+                            constraints: const BoxConstraints(),
+                            padding: const EdgeInsets.all(8),
+                          ),
+                          Text(
+                            "$_quantity",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: _increment,
+                            icon: const Icon(Icons.add, color: Colors.white, size: 18),
+                            constraints: const BoxConstraints(),
+                            padding: const EdgeInsets.all(8),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
             ],
           ),

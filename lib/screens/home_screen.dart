@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../theme/brand_theme.dart';
 import 'search_screen.dart';
+import 'notification_screen.dart';
+import 'all_vendors_screen.dart';
+import 'category_results_screen.dart';
 import '../widgets/category_card.dart';
 import '../widgets/vendor_card.dart';
 import '../widgets/fairness_banner.dart';
@@ -8,16 +11,47 @@ import '../widgets/fairness_banner.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  /// Logic to determine the meal-time greeting based on current hour
+  String _getGreetingText() {
+    final hour = DateTime.now().hour;
+
+    if (hour >= 5 && hour < 11) {
+      return "What's for breakfast?";
+    } else if (hour >= 11 && hour < 16) {
+      return "What's for lunch?";
+    } else if (hour >= 16 && hour < 21) {
+      return "What's for dinner?";
+    } else {
+      return "Craving a late-night snack?";
+    }
+  }
+
+  /// Logic to determine a time-based introductory phrase
+  String _getIntroPhrase() {
+    final hour = DateTime.now().hour;
+    if (hour >= 5 && hour < 12) return "Good morning,";
+    if (hour >= 12 && hour < 17) return "Good afternoon,";
+    return "Good evening,";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: FairDropColors.creamBackground,
       appBar: AppBar(
         title: const Text("FairDrop"),
+        backgroundColor: FairDropColors.primaryOrange,
+        foregroundColor: FairDropColors.creamBackground,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_none_rounded),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NotificationScreen()),
+              );
+            },
           ),
         ],
       ),
@@ -26,14 +60,14 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // User Greeting
-            const Text(
-              "Delivering Fairness,",
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+            // DYNAMIC User Greeting
+            Text(
+              "${_getIntroPhrase()} Ibrahim",
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
-            const Text(
-              "What's for lunch?",
-              style: TextStyle(
+            Text(
+              _getGreetingText(),
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: FairDropColors.deepCharcoal,
@@ -59,12 +93,12 @@ class HomeScreen extends StatelessWidget {
               height: 100,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                children: const [
-                  CategoryCard(name: "Swallow", icon: Icons.restaurant_menu),
-                  CategoryCard(name: "Rice", icon: Icons.rice_bowl),
-                  CategoryCard(name: "Drinks", icon: Icons.local_drink),
-                  CategoryCard(name: "Grills", icon: Icons.outdoor_grill),
-                  CategoryCard(name: "Snacks", icon: Icons.bakery_dining),
+                children: [
+                  _buildCategoryItem(context, "Swallow", Icons.restaurant_menu),
+                  _buildCategoryItem(context, "Rice", Icons.rice_bowl),
+                  _buildCategoryItem(context, "Drinks", Icons.local_drink),
+                  _buildCategoryItem(context, "Grills", Icons.outdoor_grill),
+                  _buildCategoryItem(context, "Snacks", Icons.bakery_dining),
                 ],
               ),
             ),
@@ -78,7 +112,15 @@ class HomeScreen extends StatelessWidget {
                   "Popular Near You",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                TextButton(onPressed: () {}, child: const Text("See All")),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AllVendorsScreen()),
+                    );
+                  },
+                  child: const Text("See All"),
+                ),
               ],
             ),
             const SizedBox(height: 8),
@@ -104,10 +146,23 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildCategoryItem(BuildContext context, String name, IconData icon) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CategoryResultsScreen(categoryName: name),
+          ),
+        );
+      },
+      child: CategoryCard(name: name, icon: icon),
+    );
+  }
+
   Widget _buildSearchBar(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to dedicated search flow
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const SearchScreen()),

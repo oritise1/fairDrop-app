@@ -11,6 +11,7 @@ class FairDropColors {
   static const Color errorRed = Color(0xFFD90429);
   static const Color warningAmber = Color(0xFFFFC300);
   static const Color surfaceWhite = Colors.white;
+  static const Color bannerColor = Color(0x4996D528);
 }
 
 class FairDropTheme {

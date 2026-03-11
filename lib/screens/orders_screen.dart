@@ -28,14 +28,15 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: FairDropColors.primaryOrange,
+        foregroundColor: FairDropColors.creamBackground,
         title: const Text("My Orders"),
         elevation: 0,
-        backgroundColor: Colors.white,
         bottom: TabBar(
           controller: _tabController,
-          labelColor: FairDropColors.primaryOrange,
-          unselectedLabelColor: Colors.grey,
-          indicatorColor: FairDropColors.primaryOrange,
+          labelColor: FairDropColors.surfaceWhite,
+          unselectedLabelColor: FairDropColors.creamBackground.withOpacity(0.8),
+          indicatorColor: FairDropColors.surfaceWhite,
           tabs: const [
             Tab(text: "Active"),
             Tab(text: "History"),
